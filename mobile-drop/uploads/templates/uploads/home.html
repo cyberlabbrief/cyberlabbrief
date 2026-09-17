@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 
 {% block title %}
 MobileDrop
@@ -28,13 +30,18 @@ MobileDrop
 
    <div class="upload-box">
 
-    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+    <form id="upload-form" action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
 
         {% csrf_token %}
 
         <h2>Selecciona tus archivos</h2>
 
         <input type="file" name="files" multiple>
+        <div id="upload-progress" hidden>
+            <p id="upload-status">Preparando subida...</p>
+        
+            <progress id="upload-progress-bar" value="0" max="100"></progress>
+        </div>
 
         {% if messages %}
             {% for message in messages %}
@@ -65,7 +72,9 @@ MobileDrop
 </div>
     <h2 class="files-title">Archivos subidos</h2>
 
-    <div class="file-list">
+    <div class="file-list-container">
+
+    <div id="file-list" class="file-list">
 
         {% for uploaded_file in uploaded_files %}
 
@@ -128,4 +137,6 @@ MobileDrop
 
 </div>
 
+</div>
+<script src="{% static 'uploads/app.js' %}"></script>
 {% endblock %}

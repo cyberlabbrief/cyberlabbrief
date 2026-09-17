@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import UploadedFile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 
 
 @login_required
@@ -14,14 +15,21 @@ def home(request):
 
 @login_required
 def upload(request):
-    if request.method == 'POST':
+        if request.method != 'POST':
+            return redirect('home')  # Redirige a la página de inicio si no es una solicitud POST
+        
         files = request.FILES.getlist('files')
 
         if not files:
-            messages.error(request, "No se seleccionaron archivos para subir.")
-            return redirect('home')
+            return JsonResponse(
+                 {
+                      "success": False,
+                        "message": "No has seleccionado niingún archivo para subir."
+                 },
+                 status=400,
+            )
 
-        uploaded_count = 0
+        uploaded_files = []  
 
 
 
@@ -33,16 +41,35 @@ def upload(request):
                 content_type=file.content_type
             )
 
-            uploaded_count += 1
+            uploaded_files.append(
+                 {
+                        "id":  uploaded_file.id,
+                        "original_name": uploaded_file.original_name,
+                        "size": uploaded_file.size,
+                        "content_type": uploaded_file.content_type,
+                 }
+            )
+
+        return JsonResponse(
+            {
+                "success": True,
+                "uploaded_count": len(uploaded_files),
+                "message":( f"Se han subido {len(uploaded_files)} archivo(s) correctamente."
+                ),
+    
+                "files": uploaded_files,
+            
+            }
+        )
 
         messages.success(
             request,
-            f"Se han subido {uploaded_count} archivo(s) correctamente."
+            f"Se han subido {len(uploaded_files)} archivo(s) correctamente."
         )
 
         return redirect('home')  # Redirige a la página de inicio después de subir los archivos
 
-    return redirect('home')  # Redirige a la página de inicio si no es una solicitud POST
+        return redirect('home')  # Redirige a la página de inicio si no es una solicitud POST
 
 @login_required
 def delete_file(request, file_id):
