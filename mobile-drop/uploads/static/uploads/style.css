@@ -1,0 +1,140 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 25px;
+}
+
+header h1 {
+    margin-bottom: 5px;
+}
+
+header p {
+    margin-top: 0;
+    color: #666;
+}
+
+.upload-box {
+    background: white;
+    border: 2px dashed #aaa;
+    border-radius: 16px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.upload-box h2 {
+    margin-top: 0;
+}
+
+.upload-box input {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.upload-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.files-title {
+    margin-bottom: 15px;
+}
+
+.file-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.file-item {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.preview {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+    background: #eee;
+}
+
+.file-info {
+    padding: 15px;
+}
+
+.file-name {
+    font-weight: bold;
+    word-break: break-word;
+    margin-bottom: 8px;
+}
+
+.file-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.open-link {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    background: #222;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+@media (min-width: 700px) {
+    .file-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    margin: 15px 0;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.message.success {
+    background: #b7f7c0;
+    color: #075e18;
+    border: 2px solid #138a26;
+}
+
+.message.error {
+    background: #ffb8b8;
+    color: #8b0000;
+    border: 2px solid #d10000;
+}

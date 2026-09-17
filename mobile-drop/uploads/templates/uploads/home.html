@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}
+MobileDrop
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <header>
+        <h1>MobileDrop 🚀</h1>
+
+        <p>Sube tus archivos directamente a tu servidor.</p>
+
+        {% if user.is_authenticated %}
+            <p>Usuario: {{ user.username }}</p>
+
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+
+                <button type="submit">
+                    Cerrar sesión
+                </button>
+            </form>
+        {% endif %}
+    </header>
+
+   <div class="upload-box">
+
+    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <h2>Selecciona tus archivos</h2>
+
+        <input type="file" name="files" multiple>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "error" in message.tags %}
+                    <div class="message error">
+                        ❌ {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <button class="upload-button" type="submit">
+            Subir archivos
+        </button>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if "success" in message.tags %}
+                    <div class="message success">
+                        ✅ {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+    </form>
+
+</div>
+    <h2 class="files-title">Archivos subidos</h2>
+
+    <div class="file-list">
+
+        {% for uploaded_file in uploaded_files %}
+
+            <div class="file-item">
+
+                {% if uploaded_file.content_type|slice:":6" == "image/" %}
+                    <img
+                        class="preview"
+                        src="{{ uploaded_file.file.url }}"
+                        alt="{{ uploaded_file.original_name }}"
+                    >
+                {% endif %}
+
+                <div class="file-info">
+
+                    <div class="file-name">
+                        {{ uploaded_file.original_name }}
+                    </div>
+
+                    <div class="file-meta">
+                        {{ uploaded_file.size|filesizeformat }}
+                        ·
+                        {{ uploaded_file.content_type }}
+                    </div>
+
+                    <a
+                        class="open-link"
+                        href="{{ uploaded_file.file.url }}"
+                        target="_blank"
+                    >
+                        Abrir
+                    </a>
+
+                    <form
+                        action="{% url 'delete_file' uploaded_file.id %}"
+                        method="post"
+                        style="display: inline;"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            onclick="return confirm('¿Seguro que quieres eliminar este archivo?');"
+                        >
+                            Eliminar
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p>No hay archivos todavía.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
